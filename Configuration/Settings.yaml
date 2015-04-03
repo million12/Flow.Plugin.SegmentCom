@@ -1,0 +1,11 @@
+M12:
+  SegmentCom:
+    # SegmentCom writeKey
+    writeKey: xyz
+
+    # Segment client options (that client which connects with Segment API)
+    clientOptions:
+      consumer: fork_curl
+      debug: FALSE
+
+    flushImmediatelyWhenInCLI: TRUE
