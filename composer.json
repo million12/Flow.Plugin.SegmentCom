@@ -5,6 +5,7 @@
     "license": ["MIT"],
     "require": {
       "typo3/flow": "*",
+      "typo3/party": "*",
       "segmentio/analytics-php": "*"
     },
     "autoload": {

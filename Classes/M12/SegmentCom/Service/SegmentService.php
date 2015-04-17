@@ -8,8 +8,8 @@ namespace M12\SegmentCom\Service;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Reflection\ObjectAccess;
-use TYPO3\Party\Domain\Model\AbstractParty;
 use Segment;
+use TYPO3\Party\Domain\Model\Person;
 
 /**
  * Class SegmentService
@@ -79,10 +79,10 @@ class SegmentService {
 	 * Tracks a user action
 	 *
 	 * @param  array $message
-	 * @param  AbstractParty  $overrideUser
+	 * @param  Person $overrideUser
 	 * @return boolean whether the track call succeeded
 	 */
-	public function track(array $message, AbstractParty $overrideUser = NULL) {
+	public function track(array $message, Person $overrideUser = NULL) {
 		$this->init();
 		
 		$this->insertContext($message);
@@ -100,10 +100,10 @@ class SegmentService {
 	 * from currently logged in user (if present)
 	 *
 	 * @param  array  $message
-	 * @param  AbstractParty   $overrideUser
+	 * @param  Person $overrideUser
 	 * @return boolean whether the identify call succeeded
 	 */
-	public function identify(array $message = [], AbstractParty $overrideUser = NULL) {
+	public function identify(array $message = [], Person $overrideUser = NULL) {
 		// no user? skip identify() call
 		$user = $overrideUser ? $overrideUser : $this->securityService->getAuthenticatedParty();
 		if (empty($user)) {
@@ -138,7 +138,7 @@ class SegmentService {
 	 * Otherwise it injects 
 	 * 
 	 * @param array $message
-	 * @param AbstractParty  $overrideUser
+	 * @param Person $overrideUser
 	 * @return void
 	 */
 	protected function insertUserIdOrAnonymousId(array &$message, $overrideUser = NULL) {
@@ -156,7 +156,7 @@ class SegmentService {
 
 	/**
 	 * @param array $message
-	 * @param AbstractParty  $overrideUser
+	 * @param Person $overrideUser
 	 * @return void
 	 */
 	protected function insertUserTraits(array &$message, $overrideUser = NULL) {
@@ -166,11 +166,14 @@ class SegmentService {
 		/** @var \TYPO3\Flow\Security\Account $account */
 		$account = $user->getAccounts()->first();
 		
+		/** @var \TYPO3\Party\Domain\Model\PersonName $name */
+		$name = $user->getName();
+		
 		$message['traits'] = [
 			'email' => $account->getAccountIdentifier(),
 			'username' => $account->getAccountIdentifier(),
-			'firstName' => $user->getName()->getFirstName(),
-			'lastName' => $user->getName()->getLastName(),
+			'firstName' => $name ? $name->getFirstName() : NULL,
+			'lastName' => $name ? $name->getLastName() : NULL,
 			'createdAt' => $account->getCreationDate()->format('c'),
 		];
 	}

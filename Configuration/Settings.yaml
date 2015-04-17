@@ -1,7 +1,7 @@
 M12:
   SegmentCom:
     # SegmentCom writeKey
-    writeKey: xyz
+    writeKey: PLEASE_PROVIDE_SEGMENT_WRITE_KEY_HERE
 
     # Segment client options (that client which connects with Segment API)
     clientOptions:
