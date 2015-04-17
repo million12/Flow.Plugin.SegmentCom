@@ -8,16 +8,20 @@ namespace M12\SegmentCom\Service;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Reflection\ObjectAccess;
-use Segment;
 use TYPO3\Party\Domain\Model\Person;
 
 /**
  * Class SegmentService
- * Wrapper to \Segment class
  *
  * @Flow\Scope("singleton")
  */
 class SegmentService {
+
+	/**
+	 * @Flow\Inject()
+	 * @var \M12\SegmentCom\SegmentInterface
+	 */
+	protected $segment;
 
 	/**
 	 * @Flow\Inject()
@@ -48,7 +52,7 @@ class SegmentService {
 			return;
 		}
 		
-		Segment::init($this->settings['writeKey'], $this->settings['clientOptions']);
+		$this->segment->init($this->settings['writeKey'], $this->settings['clientOptions']);
 		$this->alreadyInitialized = TRUE;
 	}
 
@@ -58,7 +62,7 @@ class SegmentService {
 	 * @return void
 	 */
 	public function flush() {
-		Segment::flush();
+		$this->segment->flush();
 	}
 
 	/**
@@ -88,7 +92,7 @@ class SegmentService {
 		$this->insertContext($message);
 		$this->insertUserIdOrAnonymousId($message, $overrideUser);
 		
-		$res = Segment::track($message);
+		$res = $this->segment->track($message);
 		
 		$this->flushIfNeeded();
 		return $res;
@@ -116,7 +120,7 @@ class SegmentService {
 		$this->insertUserIdOrAnonymousId($message, $overrideUser);
 		$this->insertUserTraits($message, $overrideUser);
 		
-		$res = Segment::identify($message);
+		$res = $this->segment->identify($message);
 		
 		$this->flushIfNeeded();
 		return $res;

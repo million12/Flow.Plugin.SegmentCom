@@ -1,0 +1,3 @@
+M12\SegmentCom\SegmentInterface:
+  className: M12\SegmentCom\SegmentTesting
+  scope: singleton
